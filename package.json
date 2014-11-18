@@ -1,18 +1,24 @@
 {
-  "name": "geohash-size",
-  "version": "0.0.0",
+  "name": "geoBoxInfo",
+  "version": "0.1.0",
   "description": "Convert geohash boxes to real world heights and widths and vice versa",
   "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/arjunmehta/node-geohash-size.git"
   },
   "author": "Arjun Mehta",
   "license": "MIT",
-  "dependencies": {"ngeohash": "*"},
+  "dependencies": {
+    "ngeohash": "~0.6.0"
+  },
+  "devDependencies": {
+    "assert": "~1.0",
+    "nodeunit": "~0.8.8"
+  },
+  "scripts": {
+    "test": "nodeunit test/test.js"
+  },
   "bugs": {
     "url": "https://github.com/arjunmehta/node-geohash-size/issues"
   },

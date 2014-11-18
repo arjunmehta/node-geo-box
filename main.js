@@ -4,7 +4,12 @@ var radiusOfTheEarth = 6378100;
 var aDegreeInRadian = (2*Math.PI/360);
 var aDegreeOfTheEarth = aDegreeInRadian * radiusOfTheEarth;
 
-var intRadiiMap = [];
+var maps = {
+  map: map,
+  fullMap: fullMap
+};
+
+var intRadiiMap = generateIntRadiusMap();
 
 function getWidthAtLat(lat, precision){
   return aDegreeOfTheEarth * Math.cos(lat*aDegreeInRadian) * precision;
@@ -30,38 +35,18 @@ function getGeoHashDistortionAtLat(lat){
 
 }
 
-var lat = 30;
+// var lat = 30;
 
-console.log("Width of 1 Degree at Latitude", getWidthAtLat(lat, 1));
-console.log("Height of 1 Degree At Longitude", getHeightAtLon(1));
-console.log("Number of Degrees of Width at Latitude", getDegreeWidthOfWidthAtLat(500000, lat));
-console.log("Number of Degrees of Height at Longitude", getDegreeHeightOfHeightAtLon(500000));
-console.log("box Distortion", getBoxDistortionAtLat(lat));
+// console.log("Width of 1 Degree at Latitude", getWidthAtLat(lat, 1));
+// console.log("Height of 1 Degree At Longitude", getHeightAtLon(1));
+// console.log("Number of Degrees of Width at Latitude", getDegreeWidthOfWidthAtLat(500000, lat));
+// console.log("Number of Degrees of Height at Longitude", getDegreeHeightOfHeightAtLon(500000));
+// console.log("box Distortion", getBoxDistortionAtLat(lat));
 
-console.log("///////////////TESTING PRECISION");
-
-
-
-// for(var i=4; i<54; i+=2){
-//   geohash = ngeohash.encode_int(lat, 79.4, i);
-//   decode = ngeohash.decode_bbox_int(geohash, i);
-//   latError = decode[2] - decode[0];
-//   lonError = decode[3] - decode[1];
-
-//   latErrorHeight = getHeightAtLon(latError);
-//   lonErrorWidth = getWidthAtLat(lat, lonError);
-//   distortion = lonErrorWidth/latErrorHeight;
-
-//   // console.log("////////HASH", i, geohash);
-//   // console.log("LOCATION:", ngeohash.decode_int(geohash, i).latitude, ",", ngeohash.decode_int(geohash, i).longitude);
-//   console.log("ERROR",  latError, ",", lonError);
-//   // console.log("ErrorSize:", latErrorHeight, lonErrorWidth);
-//   console.log("Average Radius at ", i, (latErrorHeight+lonErrorWidth)/2, "Lat Error Height", latErrorHeight, "lon Error Width", lonErrorWidth, distortion);
-
-// }
-
+// console.log("///////////////TESTING PRECISION");
 
 function generateIntRadiusMap(){
+
   var map = [];
   for(var i=-90; i<91; i++){
     map.push(generateIntRadiusMapForLat(i));
@@ -69,15 +54,11 @@ function generateIntRadiusMap(){
   return map;
 }
 
+
 function generateIntRadiusMapForLat(lat){
 
   var map = [];
   var fullMap = [];
-
-  var maps = {
-    map: map,
-    fullMap: fullMap
-  };
 
   var latAttributes = {};
 
@@ -131,8 +112,22 @@ function bitDepthForRadiusAtLat(radius, lat){
 
 
 
-intRadiiMap = generateIntRadiusMap();
-console.log(Math.round(90) + 90, intRadiiMap.length);
-console.log(intRadiiMap[Math.round(43) + 90]);
-console.log(bitDepthForRadiusAtLat(5000, 43));
+function geohashBoxDistortionAt(lat){
 
+}
+
+
+
+// intRadiiMap = 
+// console.log(Math.round(90) + 90, intRadiiMap.length);
+// console.log(intRadiiMap[Math.round(43) + 90]);
+// console.log(bitDepthForRadiusAtLat(5000, 43));
+
+
+
+var geoBoxInfo = {
+  'bitDepthForRadiusAtLat': bitDepthForRadiusAtLat
+};
+
+
+module.exports = geoBoxInfo;
