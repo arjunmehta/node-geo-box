@@ -35,16 +35,6 @@ function getGeoHashDistortionAtLat(lat){
 
 }
 
-// var lat = 30;
-
-// console.log("Width of 1 Degree at Latitude", getWidthAtLat(lat, 1));
-// console.log("Height of 1 Degree At Longitude", getHeightAtLon(1));
-// console.log("Number of Degrees of Width at Latitude", getDegreeWidthOfWidthAtLat(500000, lat));
-// console.log("Number of Degrees of Height at Longitude", getDegreeHeightOfHeightAtLon(500000));
-// console.log("box Distortion", getBoxDistortionAtLat(lat));
-
-// console.log("///////////////TESTING PRECISION");
-
 function generateIntRadiusMap(){
 
   var map = [];
@@ -62,38 +52,49 @@ function generateIntRadiusMapForLat(lat){
 
   var latAttributes = {};
 
-  var geohash = 0;
-  var latError = 0;
-  var lonError = 0;
-  var decode = [];
-  var distortion = 0;
+  var hash = 0,
+      latError = 0,
+      lonError = 0,
+      decode = [],
+      distortion = 0;
+
+  var geoHashBox = [];
 
   for(var i=2; i<54; i+=2){
-    geohash = ngeohash.encode_int(lat, 79.4, i);
-    decode = ngeohash.decode_bbox_int(geohash, i);
-    latError = decode[2] - decode[0];
-    lonError = decode[3] - decode[1];
 
-    latErrorHeight = getHeightAtLon(latError);
-    lonErrorWidth = getWidthAtLat(lat, lonError);
-    distortion = lonErrorWidth/latErrorHeight;
-    // console.log("ERROR",  latError, ",", lonError);
-    // console.log("Average Radius at ", i, (latErrorHeight+lonErrorWidth)/2, "Lat Error Height", latErrorHeight, "lon Error Width", lonErrorWidth, distortion);    
-    
-
-    latAttributes = {
-      latBoxHeight: latErrorHeight,
-      lonBoxWidth: lonErrorWidth,
-      averageBoxSize: (latErrorHeight+lonErrorWidth)/2,
-      boxDistortion: distortion
-    };
-
+    geoHashBox = geohashBoxDegreeSize(lat, 50, i);
+    latAttributes = boxAttributesAtLat(geoHashBox.lonError, geoHashBox.latError, lat);
     maps.fullMap.push(latAttributes);
     maps.map.push(latAttributes.averageBoxSize);   
     
   }
 
   return map;
+}
+
+function geohashBoxDegreeSize(lat, lon, bitDepth){
+
+  var hash = ngeohash.encode_int(lat, lon, bitDepth);
+  var decode = ngeohash.decode_bbox_int(hash, bitDepth);
+
+  return {
+    latError: decode[2] - decode[0],
+    lonError: decode[3] - decode[1]
+  };
+}
+
+function boxAttributesAtLat(degreeWidth, degreeHeight, lat){
+
+    var latErrorHeight = getHeightAtLon(degreeHeight);
+    var lonErrorWidth = getWidthAtLat(lat, degreeWidth);
+    var distortion = lonErrorWidth/latErrorHeight;
+
+    return {
+      latBoxHeight: latErrorHeight,
+      lonBoxWidth: lonErrorWidth,
+      averageBoxSize: (latErrorHeight+lonErrorWidth)/2,
+      boxDistortion: distortion
+    };
 }
 
 function bitDepthForRadiusAtLat(radius, lat){

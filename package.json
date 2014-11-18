@@ -5,7 +5,7 @@
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arjunmehta/node-geohash-size.git"
+    "url": "https://github.com/arjunmehta/node-geoBoxInfo.git"
   },
   "author": "Arjun Mehta",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "test": "nodeunit test/test.js"
   },
   "bugs": {
-    "url": "https://github.com/arjunmehta/node-geohash-size/issues"
+    "url": "https://github.com/arjunmehta/node-geoBoxInfo/issues"
   },
-  "homepage": "https://github.com/arjunmehta/node-geohash-size"
+  "homepage": "https://github.com/arjunmehta/node-geoBoxInfo"
 }
