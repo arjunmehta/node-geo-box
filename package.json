@@ -1,11 +1,11 @@
 {
-  "name": "geoBoxInfo",
+  "name": "geo-boxinfo",
   "version": "0.1.0",
-  "description": "Convert geohash boxes to real world heights and widths and vice versa",
+  "description": "Quickly calculate sizes, distortions, and distances of geocoordinate boxes and points (including geohashes)",
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arjunmehta/node-geoBoxInfo.git"
+    "url": "https://github.com/arjunmehta/node-geo-boxinfo.git"
   },
   "author": "Arjun Mehta",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "test": "nodeunit test/test.js"
   },
   "bugs": {
-    "url": "https://github.com/arjunmehta/node-geoBoxInfo/issues"
+    "url": "https://github.com/arjunmehta/node-geo-boxinfo/issues"
   },
-  "homepage": "https://github.com/arjunmehta/node-geoBoxInfo"
+  "homepage": "https://github.com/arjunmehta/node-geo-boxinfo"
 }
