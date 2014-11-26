@@ -1,13 +1,13 @@
 node-geo-box
 =====================
 
-[![Build Status](https://travis-ci.org/arjunmehta/node-geo-proximity.svg?branch=master)](https://travis-ci.org/arjunmehta/node-geo-proximity)
+[![Build Status](https://travis-ci.org/arjunmehta/node-geo-box.svg)](https://travis-ci.org/arjunmehta/node-geo-box)
 
 A node.js module that provides useful geographic box information (including geohash boxes!) for unit conversion, distortion measurement and equivelency.
 
-, including box distortion as a function of latitude, conversion from degrees to meters, and meters to degrees. Similarly useful information about geohash boxes are provided in this module as well, including geohash box distortion, geohash box size in meters, and equivelency of geohash bit depth to box size in meters.
+Box distortion as a function of latitude, conversion from degrees to meters, and meters to degrees. Similarly useful information about geohash boxes are provided in this module as well, including geohash box distortion, geohash box size in meters, and equivelency of geohash bit depth to box size in meters.
 
-This module uses general estimate calculations. Please leave feedback in the module's [GitHub issues tracker](https://github.com/arjunmehta/node-geo-boxinfo/issues).
+This module uses general estimate calculations. Please leave feedback in the module's [GitHub issues tracker](https://github.com/arjunmehta/node-geo-box/issues) or consider contributing for more precise calculations.
 
 ## Installation
 
@@ -21,53 +21,65 @@ npm install geo-box
 var geoBox = require('geo-box');
 ```
 
-Create a box at (43, -79), 2000m wide and 2000m high.
+### Creating a Box
+There are a two main ways of defining a box: using latitude, longitude, width and height (either degree or meter units), or with a geohash.
+
 ```javascript
-// box defined by lat, lon, width and height in meters
-var box = geoBox.box(43, -79, 2000, 2000, "meters");
+var box;
 
-// box defined by lat, lon, width and height in geographic degrees
-var box = geoBox.box(43, -79, 2.3, 2, "degrees");
+// box defined by lat, lon, width and height
+box = geoBox.box(44.614163, -63.435301, 3000, 2000, "meters");
+box = geoBox.box(44.614163, -63.435301, 0.0372433965, 0.0179664099, "degrees");
 
-// box defined by geohash. If you are using an integer geohash you must specify the bit depth of the geohash.
-var box = geoBox.box().fromGeohash("aga27tag");
-var box = geoBox.box().fromGeohash(28718761);
+// box defined by either a base32 or integer geohash.
+box = geoBox.box().fromGeohash("dxfvu3zb6");
+box = geoBox.box().fromGeohash(1818436824900377, 52); // must specify bit depth with integer geohashes
+```
 
-// box.center = [43, -79];
+Once you've defined your **geo-box**, you can then get or set any of its values.
+```javascript
+console.log(box.lat); // latitude value of box
+console.log(box.lon); // longitude value of box
+console.log(box.center); // center lat/lon of box
 
-box.lat;
-box.lon;
-box.center;
+console.log(box.degWidth); // how wide the box is in degrees
+console.log(box.degHeight); // how high the box is in degrees
 
-box.degWidth;
-box.degHeight;
-
-box.width;
-box.height;
-box.diagonal;
-box.distortionRatio;
-
-box.geohashBitDepthSizeEquivelent;
-
-bitDepthForRadiusAtLat
-geohashPhysicalDistortionAtLat
-geohashBoxInDegrees
-geohashBoxInMeters
-convertBoxFromDegreesToMeters
-convertBoxFromMetersToDegrees
-physicalDistortionAtLat
+console.log(box.width); // how wide the box is in meters
+console.log(box.height); // how high the box is in meters
+console.log(box.diagonal); // the trigonometric diagonal of the box
+console.log(box.distortion); // the meter width/height distortion ratio of the box
 ```
 
 
 ## API
 
-### proximity.addCoordinate(lat, lon, coordinateName, {options}, callBack);
-Add a new coordinate to your set. You can get quite technical here by specifying the geohash integer resolution at which to store (MUST BE CONSISTENT).
+### geoBox.box(lat, lon, width, height, units);
+Returns a new box object at the specified latitude and longitude.
 
-#### Options
-- `bitDepth: {Number, default is 52}`: the bit depth you want to store your geohashes in, usually the highest possible (52 bits for javascript). MUST BE CONSISTENT. If you set this to another value other than 52, you will have to ensure you set bitDepth in options for querying methods.
-- `client: {redisClient}`
-- `zset: {String}`
+If the units are set to `degrees`, when changing the latitude, the meter width (`box.width`) will adjust, and the `box.degWidth` will remain locked. If the units are set to `meters`, when changing the latitude of the box, the `box.degWidth` will adjust, and the meter width will remain locked.
+
+```javascript
+box = geoBox.box(44.614163, -63.435301, 3000, 2000, "meters");
+box = geoBox.box(44.614163, -63.435301, 0.0372433965, 0.0179664099, "degrees");
+```
+
+### geoBox.box().fromGeohash(geohash, _bitDepth_);
+Returns a new box object generated from a geohash.
+
+Because geohases are actually just boxes, you can get the bounds of the box generated by the geohash. The box size and location will be deduced from the geohash value and bit depth. Large bit depth/more imprecise geohashes will have larger boxes.
+
+Boxes generated using geohashes will have a default baseUnit as `degrees`.
+
+If you are using an integer geohash, you must specify the bit depth of the geohash, otherwise the geohash will be decoded improperly.
+
+If the units are set to `degrees`, when changing the latitude, the meter width (`box.width`) will adjust, and the `box.degWidth` will remain locked. If the units are set to `meters`, when changing the latitude of the box, the `box.degWidth` will adjust, and the meter width will remain locked.
+
+```javascript
+box = geoBox.box().fromGeohash("dxfvu3zb6");
+box = geoBox.box().fromGeohash(1818436824900377, 52);
+```
+
 
 
 

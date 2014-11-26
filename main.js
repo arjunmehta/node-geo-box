@@ -5,7 +5,47 @@ var aDegreeInRadian = (2*Math.PI/360);
 // how many meters is 1 (base) degree of the earth
 var aDegreeOfTheEarth = aDegreeInRadian * radiusOfTheEarth;
 
-var intRadiiMap = generateIntRadiusMap();
+// var intRadiiMap = generateIntRadiusMap();
+
+// function generateIntRadiusMapForLat(lat){
+
+//   var latAttributes = {},
+//       geoHashBox = [],
+//       map = [],
+//       fullMap = [];
+
+//   for(var i=2; i<54; i+=2){
+//     geoHashBox = geohashBoxDegreeSize(lat, 50, i);
+//     latAttributes = boxAttributesAtLat(geoHashBox.degWidth, geoHashBox.degHeight, lat);
+//     fullMap.push(latAttributes);
+//     map.push(latAttributes.boxGeneralSize);
+//   }
+
+//   return map;
+// }
+
+// function bitDepthForRadiusAtLat(radius, lat){
+
+//   var mapForLat = intRadiiMap[Math.round(lat) + 90];
+//   // console.log("Length of Map", mapForLat.length);
+
+//   for(var i=mapForLat.length-1; i > -1; i--){
+//     // console.log("Position:", i, "| Avg Box Size:", mapForLat[i], radius - mapForLat[i], mapForLat[i-1] - radius);
+//     if(radius - mapForLat[i] < mapForLat[i-1] - radius){
+//       return ((i*2)+2);
+//     }
+//   }
+//   return 2;
+// }
+
+// function generateIntRadiusMap(){
+
+//   var map = [];
+//   for(var i=-90; i<91; i++){
+//     map.push(generateIntRadiusMapForLat(i));
+//   }
+//   return map;
+// }
 
 function getMeterWidthAtLat(degDelta, lat){
   return aDegreeOfTheEarth * Math.cos(lat*aDegreeInRadian) * degDelta;
@@ -48,24 +88,6 @@ function geohashPhysicalDistortionAtLat(lat, lon, bitDepth){
   return latAttributes.boxDistortion;
 }
 
-
-function generateIntRadiusMapForLat(lat){
-
-  var latAttributes = {},
-      geoHashBox = [],
-      map = [],
-      fullMap = [];
-
-  for(var i=2; i<54; i+=2){
-    geoHashBox = geohashBoxDegreeSize(lat, 50, i);
-    latAttributes = boxAttributesAtLat(geoHashBox.degWidth, geoHashBox.degHeight, lat);
-    fullMap.push(latAttributes);
-    map.push(latAttributes.boxGeneralSize);
-  }
-
-  return map;
-}
-
 function geohashBoxDegreeSize(lat, lon, bitDepth){
 
   var hash = ngeohash.encode_int(lat, lon || 45, bitDepth || 52);
@@ -91,34 +113,9 @@ function boxAttributesAtLat(degreeWidth, degreeHeight, lat){
     };
 }
 
-function bitDepthForRadiusAtLat(radius, lat){
-
-  var mapForLat = intRadiiMap[Math.round(lat) + 90];
-  // console.log("Length of Map", mapForLat.length);
-
-  for(var i=mapForLat.length-1; i > -1; i--){
-    // console.log("Position:", i, "| Avg Box Size:", mapForLat[i], radius - mapForLat[i], mapForLat[i-1] - radius);
-    if(radius - mapForLat[i] < mapForLat[i-1] - radius){
-      return ((i*2)+2);
-    }
-  }
-  return 2;
-}
-
-function generateIntRadiusMap(){
-
-  var map = [];
-  for(var i=-90; i<91; i++){
-    map.push(generateIntRadiusMapForLat(i));
-  }
-  return map;
-}
-
-
 function box(lat, lon, width, height, units){
   return new Box(lat, lon, width, height, units);
 }
-
 
 
 var Box = function(lat, lon, width, height, units){
@@ -284,14 +281,15 @@ Object.defineProperty(Box.prototype, "setBaseUnit", {
 
 
 var geoBoxInfo = {
-  'bitDepthForRadiusAtLat': bitDepthForRadiusAtLat,
+  // 'bitDepthForRadiusAtLat': bitDepthForRadiusAtLat,
   'geohashPhysicalDistortionAtLat': geohashPhysicalDistortionAtLat,
   'geohashBoxInDegrees': geohashBoxDegreeSize,
   'geohashBoxInMeters': boxAttributesAtLat,
   'convertBoxFromDegreesToMeters': convertBoxFromDegreesToMeters,
   'convertBoxFromMetersToDegrees': convertBoxFromMetersToDegrees,
   'physicalDistortionAtLat': getBoxDistortionAtLat,
-  'box': box
+  'box': box,
+  'Box': Box
 };
 
 module.exports = geoBoxInfo;
