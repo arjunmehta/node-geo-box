@@ -10,9 +10,9 @@ exports.geohashBoxDegreeDistortion = function(test){
   test.expect(1);
 
   var distortion = boxInfo.geohashPhysicalDistortionAtLat(lat);
-  // console.log("DISTORTION IS", distortion);
 
-  test.equal(distortion, 1.4472157423927816);
+  test.equal(Math.round(distortion*10000000000000), Math.round(1.4472157423927816*10000000000000));
+  // On account of different systems calculating the math
 
   test.done();
 };
