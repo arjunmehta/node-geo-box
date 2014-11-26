@@ -223,6 +223,13 @@ var Box = function(lat, lon, width, height, units){
     }
   });
 
+  Object.defineProperty(this, "latitudinalDegreeDistortion", {
+    enumerable: true,
+    get: function () {
+      return (height/degHeight)/(width/degWidth);
+    }
+  });
+
 
   Object.defineProperty(this, "degWidth", {
     enumerable: true,

@@ -104,11 +104,11 @@ exports.box = function(test){
   test.expect(1);
 
   var box = boxInfo.box(lat, lon, 3000, 2000, "meters");
-  printBox(box);
-  box.lat = 85;
-  printBox(box);
-  box.setBaseUnit('degrees').lat = 40;
-  printBox(box);
+  // printBox(box);
+  // box.lat = 85;
+  // printBox(box);
+  // box.setBaseUnit('degrees').lat = 40;
+  // printBox(box);
   test.equal(true, true);
 
   test.done();
