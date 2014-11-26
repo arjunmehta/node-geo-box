@@ -36,7 +36,9 @@ box = geoBox.box().fromGeohash("dxfvu3zb6");
 box = geoBox.box().fromGeohash(1818436824900377, 52); // must specify bit depth with integer geohashes
 ```
 
-Once you've defined your **geo-box**, you can then get or set any of its values.
+### Box Properties
+Once you've defined your **geo-box**, you can then get or set any of its values. Related values will automatically be updated.
+
 ```javascript
 console.log(box.lat); // latitude value of box
 console.log(box.lon); // longitude value of box

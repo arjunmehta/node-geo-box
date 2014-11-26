@@ -1,6 +1,6 @@
 {
   "name": "geo-box",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create, manage and analyze geographical boxes (including geohashes) to get positional, size and distortion information.",
   "main": "main.js",
   "repository": {
@@ -12,6 +12,16 @@
   "dependencies": {
     "ngeohash": "~0.6.0"
   },
+  "keywords": [
+    "geohash",
+    "geobox",
+    "coordinates",
+    "latitude",
+    "longitude",
+    "distortion",
+    "degrees",
+    "meters"
+  ],
   "devDependencies": {
     "assert": "~1.0",
     "nodeunit": "~0.8.8"
