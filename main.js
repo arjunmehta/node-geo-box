@@ -2,11 +2,8 @@ var ngeohash = require('ngeohash');
 
 var radiusOfTheEarth = 6378100;
 var aDegreeInRadian = (2*Math.PI/360);
-
 // how many meters is 1 (base) degree of the earth
 var aDegreeOfTheEarth = aDegreeInRadian * radiusOfTheEarth;
-
-var maps = [];
 
 var intRadiiMap = generateIntRadiusMap();
 
@@ -123,16 +120,15 @@ function box(lat, lon, width, height, units){
 }
 
 
+
 var Box = function(lat, lon, width, height, units){
 
   units = units || "degrees";
-  var baseUnitDegrees = false;
 
   var degWidth = 0,
       degHeight = 0;
 
   if(units === "degrees"){
-    this.baseUnitDegrees = true;
     degWidth = width;
     degHeight = height;
     width = getMeterWidthAtLat(degWidth, lat);
@@ -143,13 +139,25 @@ var Box = function(lat, lon, width, height, units){
     degHeight = getDegreeHeightOfHeightAtLon(height);
   }
 
+
+  Object.defineProperty(this, "baseUnit", {
+    enumerable: true,
+    get: function () {
+      return units;
+    },
+    set: function(newBaseUnit){
+      units = newBaseUnit;
+    }
+  });
+
+
   Object.defineProperty(this, "lat", {
     enumerable: true,
     get: function () {
       return lat;
     },
     set: function(newLat){
-      if (baseUnitDegrees === true){
+      if (this.baseUnit === 'degrees'){
         lat = newLat;
         width = getMeterWidthAtLat(degWidth, lat);
       }
@@ -240,30 +248,44 @@ var Box = function(lat, lon, width, height, units){
       height = getMeterHeightAtLon(newDegHeight);
     }
   });
-
-
 };
 
-Box.prototype.fromGeohash = function(geohash, bitDepth){
-  var decode = [];
+Object.defineProperty(Box.prototype, "fromGeohash", {
+  enumerable: false,
+  value: function(geohash, bitDepth){
+    var decode = [];
 
-  if(typeof geohash === 'number'){
-    decode = ngeohash.decode_bbox_int(geohash, bitDepth || 52);
+    if(typeof geohash === 'number'){
+      decode = ngeohash.decode_bbox_int(geohash, bitDepth || 52);
+    }
+    else if(typeof geohash === 'string'){
+      decode = ngeohash.decode_bbox(geohash);
+    }
+
+    return new Box(decode[0], decode[1], decode[3] - decode[1], decode[2] - decode[0], "degrees");
   }
-  else if(typeof geohash === 'string'){
-    decode = ngeohash.decode_bbox(geohash);
+});
+
+Object.defineProperty(Box.prototype, "setBaseUnit", {
+  enumerable: false,
+  value: function(units){
+    console.log(units);
+    if(units === 'degrees'){
+      this.baseUnit = 'degrees';
+      console.log("is degrees");
+      console.log(this.baseUnit);
+    }
+    else{
+      this.baseUnit = 'meters';
+    }
+    return this;
   }
-
-  return new Box(decode[0], decode[1], decode[3] - decode[1], decode[2] - decode[0], "degrees");
-};
-
-
-
+});
 
 
 var geoBoxInfo = {
   'bitDepthForRadiusAtLat': bitDepthForRadiusAtLat,
-  'geohashPhysicalDistortionAtLat': geohashPhysicalDistortionAtLat,  
+  'geohashPhysicalDistortionAtLat': geohashPhysicalDistortionAtLat,
   'geohashBoxInDegrees': geohashBoxDegreeSize,
   'geohashBoxInMeters': boxAttributesAtLat,
   'convertBoxFromDegreesToMeters': convertBoxFromDegreesToMeters,

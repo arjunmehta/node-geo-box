@@ -18,7 +18,7 @@ npm install geo-box
 
 ## Usage
 ```javascript
-var geoBox = require('geo-boxinfo');
+var geoBox = require('geo-box');
 ```
 
 Create a box at (43, -79), 2000m wide and 2000m high.
@@ -63,14 +63,6 @@ physicalDistortionAtLat
 
 ### proximity.addCoordinate(lat, lon, coordinateName, {options}, callBack);
 Add a new coordinate to your set. You can get quite technical here by specifying the geohash integer resolution at which to store (MUST BE CONSISTENT).
-
-#### Options
-- `bitDepth: {Number, default is 52}`: the bit depth you want to store your geohashes in, usually the highest possible (52 bits for javascript). MUST BE CONSISTENT. If you set this to another value other than 52, you will have to ensure you set bitDepth in options for querying methods.
-- `client: {redisClient}`
-- `zset: {String}`
-
-### proximity.addCoordinates(coordinateArray, {options}, callBack);
-Adds an array of new coordinates to your set. The `coordinateArray` must be in the form `[[lat, lon, name],[lat, lon, name],...,[lat, lon, name]]`. Again you can specify the geohash integer resolution at which to store (MUST BE CONSISTENT). Use this method for bulk additions, as it is much faster than individual adds.
 
 #### Options
 - `bitDepth: {Number, default is 52}`: the bit depth you want to store your geohashes in, usually the highest possible (52 bits for javascript). MUST BE CONSISTENT. If you set this to another value other than 52, you will have to ensure you set bitDepth in options for querying methods.

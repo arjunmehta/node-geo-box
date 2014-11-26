@@ -115,10 +115,11 @@ exports.box = function(test){
   test.expect(1);
 
   var box = boxInfo.box(lat, lon, 3000, 2000, "meters");
-  console.log("Box ", box);
-  for(var prop in box){
-    console.log("property:", prop, box[prop]);
-  }
+  printBox(box);
+  box.lat = 85;
+  printBox(box);
+  box.setBaseUnit('degrees').lat = 40;
+  printBox(box);
   test.equal(true, true);
 
   test.done();
@@ -131,3 +132,9 @@ exports.tearDown = function(done){
 
 
 return exports;
+
+function  printBox(box){
+  for(var prop in box){
+    console.log("property:", prop, box[prop]);
+  }
+}
