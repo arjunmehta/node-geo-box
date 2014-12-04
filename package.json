@@ -10,7 +10,11 @@
   "author": "Arjun Mehta",
   "license": "MIT",
   "dependencies": {
-    "ngeohash": "~0.6.0"
+    "ngeohash": "~0.6.0",
+    "node-vincenty": "~0.0.6",
+    "node-geo-distance": "~1.1.0",
+    "geodist": "~0.2.1",
+    "mt-latlon": "~0.0.3"
   },
   "keywords": [
     "geohash",

@@ -300,3 +300,79 @@ var geoBoxInfo = {
 };
 
 module.exports = geoBoxInfo;
+
+
+
+// from http://www.movable-type.co.uk/scripts/latlong.html
+function rhumbLine(φ1, λ1, d, θ){
+
+  θ = toRadians(θ);
+  φ1 = toRadians(φ1);
+  λ1 = toRadians(λ1);
+
+  var R = 6378100; // m
+  var δ = d/R;
+  
+  var Δφ = δ*Math.cos(θ);  
+  var φ2 = φ1 + Δφ;
+
+  // console.log("///////////AAAAAAAAAAAAAAAA");
+  // console.log("θ", θ, "Δφ", Δφ, "Math.cos(θ)", Math.cos(θ), "φ2", φ2);
+  
+  var Δψ = Math.log(Math.tan(φ2/2+Math.PI/4)/Math.tan(φ1/2+Math.PI/4));
+  var q = Δψ > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
+  var Δλ = (δ*Math.sin(θ))/q;
+
+  // check for some daft bugger going past the pole, normalise latitude if so
+  // if (Math.abs(φ2) > Math.PI/2) φ2 = φ2>0 ? Math.PI-φ2 : -Math.PI-φ2;
+
+  // var λ2 = (λ1+Δλ+Math.PI)%(2*Math.PI) - Math.PI;
+  var λ2 = λ1+Δλ;
+
+  console.log("///////////BBBBBBBBBBBBBBBB");
+  console.log("θ", θ);
+  console.log("d", d);
+  console.log("δ", δ);
+  console.log("Δφ", Δφ);
+  console.log("Math.cos(θ)", Math.cos(θ));
+  console.log("Δψ", Δψ);
+  console.log("φ2", φ2);
+  console.log("Δλ", Δλ);
+  console.log("q", q);
+  console.log("λ1", λ1);
+
+  return [toDegrees(φ2), toDegrees(λ2)];
+}
+
+function haversine(lat1, lon1, lat2, lon2){
+
+  var R = 6378100; // km
+  var φ1 = toRadians(lat1);
+  var φ2 = toRadians(lat2);
+  var Δφ = toRadians(lat2-lat1);
+  var Δλ = toRadians(lon2-lon1);
+
+  var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  var d = R * c;
+
+  return d;
+}
+
+function toRadians(angle){
+  return angle * (Math.PI / 180);
+}
+
+function toDegrees(angle){
+  return angle * (180 / Math.PI);
+}
+
+console.log("Haversine Vertical", haversine(43.646838, -79.403723, 42.646838, -79.403723));
+console.log("Rhumb Line Vertical", rhumbLine(43.646838, -79.403723, 111318.84502145034, 0));
+
+console.log("Haversine Horizontal", haversine(43.646838, -79.403723, 43.646838, -78.403723));
+console.log("Rhumb Line Horizontal", rhumbLine(43.646838, -79.403723, 80550.70540633197, 90));
