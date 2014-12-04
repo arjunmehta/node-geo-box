@@ -304,7 +304,7 @@ module.exports = geoBoxInfo;
 
 
 // from http://www.movable-type.co.uk/scripts/latlong.html
-function rhumbLine(φ1, λ1, d, θ){
+function rhumbLineDestinationPoint(φ1, λ1, d, θ){
 
   θ = toRadians(θ);
   φ1 = toRadians(φ1);
@@ -372,7 +372,7 @@ function toDegrees(angle){
 }
 
 console.log("Haversine Vertical", haversine(43.646838, -79.403723, 42.646838, -79.403723));
-console.log("Rhumb Line Vertical", rhumbLine(43.646838, -79.403723, 111318.84502145034, 0));
+console.log("Rhumb Line Vertical", rhumbLineDestinationPoint(43.646838, -79.403723, 111318.84502145034, 0));
 
 console.log("Haversine Horizontal", haversine(43.646838, -79.403723, 43.646838, -78.403723));
-console.log("Rhumb Line Horizontal", rhumbLine(43.646838, -79.403723, 80550.70540633197, 90));
+console.log("Rhumb Line Horizontal", rhumbLineDestinationPoint(43.646838, -79.403723, 80550.70540633197, 90));
